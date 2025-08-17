@@ -1,39 +1,54 @@
 // utils/api.ts
+// 增强的API服务，集成服务抽象层功能
 
-// Import WeChat Mini Program types and APIs
-import type { WechatMiniprogram } from "wechat-miniprogram-types"
-import { getApp, wx, type IAppOption } from "./miniprogram-api"
+import { wx } from "./miniprogram-api"
+import type { 
+  HealthData, 
+  HealthAssessment, 
+  DoctorMessage, 
+  HealthIndicator, 
+  UserStats,
+  ServiceStatus,
+  IDataService 
+} from "./service-interfaces"
 
-interface HealthData {
-  id?: string
-  type: "blood_pressure" | "blood_sugar" | "temperature" | "weight"
-  value: string
-  date: string
-  time: string
-}
-
-interface HealthAssessment {
-  score: number
-  riskLevel: "low" | "medium" | "high"
-  summary: string
-  recommendations?: Array<{
-    id: string
-    icon: string
-    title: string
-    description: string
-  }>
-  date: string
-}
-
-interface DoctorMessage {
-  id: string
-  content: string
-  sender: "user" | "doctor"
-  timestamp: string
-}
-
-class ApiService {
+class ApiService implements IDataService {
   private baseUrl = "https://your-api-domain.com/api"
+  private currentMode: 'mock' | 'api' = 'mock'
+  private status: ServiceStatus = {
+    mode: 'mock',
+    isOnline: true,
+    lastApiCall: 0,
+    errorCount: 0,
+    fallbackActive: false
+  }
+
+  constructor() {
+    // 从存储中加载模式设置
+    this.loadModeFromStorage()
+  }
+
+  private loadModeFromStorage(): void {
+    try {
+      const storedMode = wx.getStorageSync('app_mode')
+      if (storedMode === 'api' || storedMode === 'mock') {
+        this.currentMode = storedMode
+        this.status.mode = storedMode
+      }
+    } catch (error) {
+      // 如果获取失败，使用默认的mock模式
+      this.currentMode = 'mock'
+      this.status.mode = 'mock'
+    }
+  }
+
+  private saveModeToStorage(mode: 'mock' | 'api'): void {
+    try {
+      wx.setStorageSync('app_mode', mode)
+    } catch (error) {
+      console.error('保存模式设置失败:', error)
+    }
+  }
 
   // 模拟数据
   private mockHealthData: HealthData[] = [
@@ -92,268 +107,279 @@ class ApiService {
 
   // 获取健康数据
   async getHealthData(): Promise<HealthData[]> {
-    const app = getApp<IAppOption>()
 
-    if (!app.globalData.isApiMode) {
+    if (this.currentMode === 'mock') {
       // 模拟模式
-      return new Promise((resolve) => {
-        setTimeout(() => resolve(this.mockHealthData), 500)
-      })
+      return this.simulateApiDelay(() => this.mockHealthData, 500)
     }
 
-    // API模式
-    return new Promise((resolve, reject) => {
-      wx.request({
-        url: `${this.baseUrl}/health-data`,
-        method: "GET",
-        success: (res: { data: HealthData[] }) => {
-          resolve(res.data as HealthData[])
-        },
-        fail: (err: any) => {
-          console.error("API请求失败，使用模拟数据", err)
-          resolve(this.mockHealthData)
-        },
-      })
-    })
+    // API模式，带降级处理
+    try {
+      const data = await this.makeApiCall<HealthData[]>('/health-data', 'GET')
+      this.onApiSuccess()
+      return data
+    } catch (error) {
+      console.warn('API调用失败，使用模拟数据:', error)
+      this.handleApiError(error)
+      return this.mockHealthData
+    }
   }
 
   // 提交健康数据
   async submitHealthData(data: Omit<HealthData, "id">): Promise<boolean> {
-    const app = getApp<IAppOption>()
-
-    if (!app.globalData.isApiMode) {
+    if (this.currentMode === 'mock') {
       // 模拟模式
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          this.mockHealthData.push({
-            ...data,
-            id: Date.now().toString(),
-          })
-          resolve(true)
-        }, 500)
-      })
+      return this.simulateApiDelay(() => {
+        this.mockHealthData.push({
+          ...data,
+          id: Date.now().toString(),
+        })
+        return true
+      }, 500)
     }
 
-    // API模式
-    return new Promise((resolve, reject) => {
-      wx.request({
-        url: `${this.baseUrl}/health-data`,
-        method: "POST",
-        data: data,
-        success: (res: any) => {
-          resolve(true)
-        },
-        fail: (err: any) => {
-          console.error("提交失败", err)
-          resolve(false)
-        },
-      })
-    })
+    // API模式，带降级处理
+    try {
+      await this.makeApiCall('/health-data', 'POST', data)
+      this.onApiSuccess()
+      return true
+    } catch (error) {
+      console.error('提交健康数据失败:', error)
+      this.handleApiError(error)
+      return false
+    }
   }
 
   // 获取健康评估
   async getHealthAssessment(): Promise<HealthAssessment> {
-    const app = getApp<IAppOption>()
-
-    if (!app.globalData.isApiMode) {
+    if (this.currentMode === 'mock') {
       // 模拟模式
-      return new Promise((resolve) => {
-        setTimeout(() => resolve(this.mockAssessment), 800)
-      })
+      return this.simulateApiDelay(() => this.mockAssessment, 800)
     }
 
-    // API模式
-    return new Promise((resolve, reject) => {
-      wx.request({
-        url: `${this.baseUrl}/health-assessment`,
-        method: "GET",
-        success: (res) => {
-          resolve(res.data as HealthAssessment)
-        },
-        fail: (err) => {
-          console.error("API请求失败，使用模拟数据", err)
-          resolve(this.mockAssessment)
-        },
-      })
-    })
+    // API模式，带降级处理
+    try {
+      const assessment = await this.makeApiCall<HealthAssessment>('/health-assessment', 'GET')
+      this.onApiSuccess()
+      return assessment
+    } catch (error) {
+      console.warn('API调用失败，使用模拟数据:', error)
+      this.handleApiError(error)
+      return this.mockAssessment
+    }
   }
 
   // 获取医生消息
   async getDoctorMessages(): Promise<DoctorMessage[]> {
-    const app = getApp<IAppOption>()
-
-    if (!app.globalData.isApiMode) {
-      return new Promise((resolve) => {
-        setTimeout(() => resolve(this.mockMessages), 300)
-      })
+    if (this.currentMode === 'mock') {
+      return this.simulateApiDelay(() => this.mockMessages, 300)
     }
 
-    return new Promise((resolve, reject) => {
-      wx.request({
-        url: `${this.baseUrl}/doctor-messages`,
-        method: "GET",
-        success: (res) => {
-          resolve(res.data as DoctorMessage[])
-        },
-        fail: (err) => {
-          console.error("API请求失败，使用模拟数据", err)
-          resolve(this.mockMessages)
-        },
-      })
-    })
+    try {
+      const messages = await this.makeApiCall<DoctorMessage[]>('/doctor-messages', 'GET')
+      this.onApiSuccess()
+      return messages
+    } catch (error) {
+      console.warn('API调用失败，使用模拟数据:', error)
+      this.handleApiError(error)
+      return this.mockMessages
+    }
   }
 
   // 发送消息给医生
   async sendMessageToDoctor(content: string): Promise<boolean> {
-    const app = getApp<IAppOption>()
-
-    if (!app.globalData.isApiMode) {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          this.mockMessages.push({
-            id: Date.now().toString(),
-            content,
-            sender: "user",
-            timestamp: new Date().toLocaleString(),
-          })
-          resolve(true)
-        }, 300)
-      })
+    if (this.currentMode === 'mock') {
+      return this.simulateApiDelay(() => {
+        this.mockMessages.push({
+          id: Date.now().toString(),
+          content,
+          sender: "user",
+          timestamp: new Date().toLocaleString(),
+        })
+        return true
+      }, 300)
     }
 
-    return new Promise((resolve, reject) => {
-      wx.request({
-        url: `${this.baseUrl}/doctor-messages`,
-        method: "POST",
-        data: { content },
-        success: (res) => {
-          resolve(true)
-        },
-        fail: (err) => {
-          console.error("发送失败", err)
-          resolve(false)
-        },
-      })
-    })
+    try {
+      await this.makeApiCall('/doctor-messages', 'POST', { content })
+      this.onApiSuccess()
+      return true
+    } catch (error) {
+      console.error('发送消息失败:', error)
+      this.handleApiError(error)
+      return false
+    }
   }
 
   // 获取健康指标
-  async getHealthIndicators(): Promise<
-    Array<{
-      type: string
-      name: string
-      value: string
-      unit: string
-      status: "normal" | "warning" | "danger"
-      statusText: string
-    }>
-  > {
-    const app = getApp<IAppOption>()
+  async getHealthIndicators(): Promise<HealthIndicator[]> {
+    const mockIndicators: HealthIndicator[] = [
+      {
+        type: "blood_pressure",
+        name: "血压",
+        value: "120/80",
+        unit: "mmHg",
+        status: "normal",
+        statusText: "正常",
+      },
+      { type: "blood_sugar", name: "血糖", value: "5.6", unit: "mmol/L", status: "normal", statusText: "正常" },
+      { type: "bmi", name: "BMI", value: "22.5", unit: "", status: "normal", statusText: "正常" },
+      { type: "heart_rate", name: "心率", value: "72", unit: "bpm", status: "normal", statusText: "正常" },
+    ]
 
-    if (!app.globalData.isApiMode) {
-      return new Promise((resolve) => {
-        setTimeout(
-          () =>
-            resolve([
-              {
-                type: "blood_pressure",
-                name: "血压",
-                value: "120/80",
-                unit: "mmHg",
-                status: "normal",
-                statusText: "正常",
-              },
-              { type: "blood_sugar", name: "血糖", value: "5.6", unit: "mmol/L", status: "normal", statusText: "正常" },
-              { type: "bmi", name: "BMI", value: "22.5", unit: "", status: "normal", statusText: "正常" },
-              { type: "heart_rate", name: "心率", value: "72", unit: "bpm", status: "normal", statusText: "正常" },
-            ]),
-          500,
-        )
-      })
+    if (this.currentMode === 'mock') {
+      return this.simulateApiDelay(() => mockIndicators, 500)
     }
 
-    return new Promise((resolve, reject) => {
-      wx.request({
-        url: `${this.baseUrl}/health-indicators`,
-        method: "GET",
-        success: (res) => {
-          resolve(res.data)
-        },
-        fail: (err) => {
-          console.error("API请求失败，使用模拟数据", err)
-          resolve([])
-        },
-      })
-    })
+    try {
+      const indicators = await this.makeApiCall<HealthIndicator[]>('/health-indicators', 'GET')
+      this.onApiSuccess()
+      return indicators
+    } catch (error) {
+      console.warn('API调用失败，使用模拟数据:', error)
+      this.handleApiError(error)
+      return mockIndicators
+    }
   }
 
   // 执行健康评估
   async performHealthAssessment(): Promise<HealthAssessment> {
-    const app = getApp<IAppOption>()
-
-    if (!app.globalData.isApiMode) {
-      return new Promise((resolve) => {
-        setTimeout(() => resolve(this.mockAssessment), 2000)
-      })
+    if (this.currentMode === 'mock') {
+      return this.simulateApiDelay(() => this.mockAssessment, 2000)
     }
 
+    try {
+      const assessment = await this.makeApiCall<HealthAssessment>('/health-assessment/analyze', 'POST')
+      this.onApiSuccess()
+      return assessment
+    } catch (error) {
+      console.warn('API调用失败，使用模拟数据:', error)
+      this.handleApiError(error)
+      return this.mockAssessment
+    }
+  }
+
+  // 获取用户统计数据
+  async getUserStats(): Promise<UserStats> {
+    const mockStats: UserStats = {
+      recordCount: 25,
+      assessmentCount: 3,
+      consultCount: 2,
+      daysUsed: 15,
+    }
+
+    if (this.currentMode === 'mock') {
+      return this.simulateApiDelay(() => mockStats, 500)
+    }
+
+    try {
+      const stats = await this.makeApiCall<UserStats>('/user/stats', 'GET')
+      this.onApiSuccess()
+      return stats
+    } catch (error) {
+      console.warn('API调用失败，使用模拟数据:', error)
+      this.handleApiError(error)
+      return mockStats
+    }
+  }
+
+  // 新增的服务状态和管理方法
+  getServiceStatus(): ServiceStatus {
+    return { ...this.status }
+  }
+
+  async isOnline(): Promise<boolean> {
+    try {
+      await this.makeApiCall('/health-check', 'GET')
+      this.onApiSuccess()
+      return true
+    } catch (error) {
+      this.status.isOnline = false
+      return false
+    }
+  }
+
+  getCurrentMode(): 'mock' | 'api' {
+    return this.currentMode
+  }
+
+  switchMode(mode: 'mock' | 'api'): void {
+    this.currentMode = mode
+    this.status.mode = mode
+    this.saveModeToStorage(mode)
+    console.log(`服务模式已切换到: ${mode}`)
+  }
+
+  // 私有辅助方法
+  private simulateApiDelay<T>(operation: () => T, delay: number = 500): Promise<T> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        this.status.lastApiCall = Date.now()
+        resolve(operation())
+      }, delay)
+    })
+  }
+
+  private async makeApiCall<T>(
+    endpoint: string, 
+    method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET', 
+    data?: any
+  ): Promise<T> {
     return new Promise((resolve, reject) => {
+      this.status.lastApiCall = Date.now()
+
       wx.request({
-        url: `${this.baseUrl}/health-assessment/analyze`,
-        method: "POST",
-        success: (res) => {
-          resolve(res.data as HealthAssessment)
+        url: `${this.baseUrl}${endpoint}`,
+        method,
+        data,
+        timeout: 10000,
+        success: (res: any) => {
+          if (res.statusCode >= 200 && res.statusCode < 300) {
+            resolve(res.data as T)
+          } else {
+            const error = new Error(`API请求失败: ${res.statusCode}`) as any
+            error.code = `HTTP_${res.statusCode}`
+            error.context = `${method} ${endpoint}`
+            error.shouldFallback = true
+            error.userMessage = '服务暂时不可用，正在使用离线数据'
+            reject(error)
+          }
         },
-        fail: (err) => {
-          console.error("API请求失败，使用模拟数据", err)
-          resolve(this.mockAssessment)
-        },
+        fail: (err: any) => {
+          const error = new Error(`网络请求失败: ${err.errMsg}`) as any
+          error.code = 'NETWORK_ERROR'
+          error.context = `${method} ${endpoint}`
+          error.shouldFallback = true
+          error.userMessage = '网络连接失败，正在使用离线数据'
+          reject(error)
+        }
       })
     })
   }
 
-  // 获取用户统计数据
-  async getUserStats(): Promise<{
-    recordCount: number
-    assessmentCount: number
-    consultCount: number
-    daysUsed: number
-  }> {
-    const app = getApp<IAppOption>()
-
-    if (!app.globalData.isApiMode) {
-      return new Promise((resolve) => {
-        setTimeout(
-          () =>
-            resolve({
-              recordCount: 25,
-              assessmentCount: 3,
-              consultCount: 2,
-              daysUsed: 15,
-            }),
-          500,
-        )
-      })
+  private handleApiError(error: any): void {
+    this.status.errorCount++
+    
+    if (error.shouldFallback) {
+      this.status.fallbackActive = true
+      console.log(`API服务降级: ${error.userMessage}`)
     }
 
-    return new Promise((resolve, reject) => {
-      wx.request({
-        url: `${this.baseUrl}/user/stats`,
-        method: "GET",
-        success: (res) => {
-          resolve(res.data)
-        },
-        fail: (err) => {
-          console.error("API请求失败，使用模拟数据", err)
-          resolve({
-            recordCount: 0,
-            assessmentCount: 0,
-            consultCount: 0,
-            daysUsed: 0,
-          })
-        },
-      })
-    })
+    if (this.status.errorCount >= 3) {
+      this.status.isOnline = false
+    }
+  }
+
+  private onApiSuccess(): void {
+    const wasOffline = !this.status.isOnline
+    
+    this.status.errorCount = 0
+    this.status.fallbackActive = false
+    this.status.isOnline = true
+    
+    if (wasOffline) {
+      console.log('API服务已恢复')
+    }
   }
 }
 
