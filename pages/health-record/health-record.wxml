@@ -1,0 +1,94 @@
+<!--health-record.wxml-->
+<view class="page">
+  <view class="header">
+    <text class="page-title">健康数据记录</text>
+    <text class="page-subtitle">记录您的日常健康指标</text>
+  </view>
+
+  <!-- 数据类型选择 -->
+  <view class="card">
+    <text class="section-title">选择数据类型</text>
+    <view class="data-types">
+      <view 
+        class="type-item {{selectedType === item.value ? 'active' : ''}}"
+        wx:for="{{dataTypes}}" 
+        wx:key="value"
+        bindtap="selectDataType"
+        data-type="{{item.value}}"
+      >
+        <image class="type-icon" src="{{item.icon}}" />
+        <text class="type-label">{{item.label}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 数据输入表单 -->
+  <view class="card">
+    <text class="section-title">输入数据</text>
+    <view class="form">
+      <view class="form-item">
+        <text class="form-label">{{currentTypeInfo.label}}</text>
+        <input 
+          class="form-input" 
+          type="{{currentTypeInfo.inputType}}"
+          placeholder="{{currentTypeInfo.placeholder}}"
+          value="{{inputValue}}"
+          bindinput="onInputChange"
+        />
+        <text class="form-unit">{{currentTypeInfo.unit}}</text>
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">记录时间</text>
+        <picker 
+          mode="date" 
+          value="{{recordDate}}" 
+          bindchange="onDateChange"
+        >
+          <view class="picker-display">{{recordDate}}</view>
+        </picker>
+      </view>
+
+      <view class="form-item">
+        <picker 
+          mode="time" 
+          value="{{recordTime}}" 
+          bindchange="onTimeChange"
+        >
+          <view class="picker-display">{{recordTime}}</view>
+        </picker>
+      </view>
+
+      <view class="form-item" wx:if="{{currentTypeInfo.showNote}}">
+        <text class="form-label">备注</text>
+        <textarea 
+          class="form-textarea" 
+          placeholder="添加备注信息（可选）"
+          value="{{note}}"
+          bindinput="onNoteChange"
+        />
+      </view>
+    </view>
+
+    <button class="btn-primary submit-btn" bindtap="submitData" disabled="{{!inputValue}}">
+      提交记录
+    </button>
+  </view>
+
+  <!-- 最近记录 -->
+  <view class="card" wx:if="{{recentRecords.length > 0}}">
+    <text class="section-title">最近记录</text>
+    <view class="recent-records">
+      <view class="record-item" wx:for="{{recentRecords}}" wx:key="id">
+        <view class="record-info">
+          <text class="record-type">{{item.typeLabel}}</text>
+          <text class="record-value">{{item.value}} {{item.unit}}</text>
+        </view>
+        <view class="record-time">
+          <text class="record-date">{{item.date}}</text>
+          <text class="record-time-text">{{item.time}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

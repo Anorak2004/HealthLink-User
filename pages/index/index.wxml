@@ -1,0 +1,75 @@
+<!--index.wxml-->
+<view class="page">
+  <!-- 用户信息卡片 -->
+  <view class="card">
+    <view class="flex align-center justify-between">
+      <view>
+        <text class="user-name">{{userInfo.nickName || '用户'}}</text>
+        <view class="user-status">
+          <text class="status-text">健康状态: </text>
+          <text class="{{healthStatus.class}}">{{healthStatus.text}}</text>
+        </view>
+      </view>
+      <image class="avatar" src="{{userInfo.avatarUrl || '/images/default-avatar.png'}}" />
+    </view>
+  </view>
+
+  <!-- 健康概览 -->
+  <view class="card">
+    <view class="health-overview">
+      <text class="section-title">今日健康概览</text>
+      <view class="health-score">
+        <text class="score-number">{{healthScore}}</text>
+        <text class="score-label">健康评分</text>
+      </view>
+      <view class="health-indicators">
+        <view class="indicator" wx:for="{{healthIndicators}}" wx:key="type">
+          <text class="indicator-label">{{item.label}}</text>
+          <text class="indicator-value {{item.status}}">{{item.value}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 快捷功能 -->
+  <view class="card">
+    <text class="section-title">快捷功能</text>
+    <view class="quick-actions">
+      <view class="action-item" bindtap="goToHealthRecord">
+        <image class="action-icon" src="/images/record-icon.png" />
+        <text class="action-text">记录健康数据</text>
+      </view>
+      <view class="action-item" bindtap="goToVoiceInput">
+        <image class="action-icon" src="/images/voice-icon.png" />
+        <text class="action-text">语音输入</text>
+      </view>
+      <view class="action-item" bindtap="goToAssessment">
+        <image class="action-icon" src="/images/assessment-icon.png" />
+        <text class="action-text">健康评估</text>
+      </view>
+      <view class="action-item" bindtap="goToDoctor">
+        <image class="action-icon" src="/images/doctor-icon.png" />
+        <text class="action-text">咨询医生</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 健康提醒 -->
+  <view class="card" wx:if="{{reminders.length > 0}}">
+    <text class="section-title">健康提醒</text>
+    <view class="reminders">
+      <view class="reminder-item" wx:for="{{reminders}}" wx:key="id">
+        <view class="reminder-icon">⏰</view>
+        <view class="reminder-content">
+          <text class="reminder-title">{{item.title}}</text>
+          <text class="reminder-time">{{item.time}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 模式切换提示 -->
+  <view class="mode-indicator">
+    <text class="mode-text">当前模式: {{currentMode}}</text>
+  </view>
+</view>

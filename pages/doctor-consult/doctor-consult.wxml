@@ -1,0 +1,41 @@
+<view class="container">
+  <view class="header">
+    <text class="title">医生咨询</text>
+    <view class="mode-switch">
+      <text class="mode-text">{{isSimulationMode ? '模拟模式' : 'API模式'}}</text>
+      <switch checked="{{isSimulationMode}}" bindchange="onModeChange" color="#4CAF50"/>
+    </view>
+  </view>
+
+  <view class="doctor-list">
+    <view class="doctor-card" wx:for="{{doctors}}" wx:key="id" bindtap="selectDoctor" data-doctor="{{item}}">
+      <image class="doctor-avatar" src="{{item.avatar}}" mode="aspectFill"/>
+      <view class="doctor-info">
+        <text class="doctor-name">{{item.name}}</text>
+        <text class="doctor-title">{{item.title}}</text>
+        <text class="doctor-hospital">{{item.hospital}}</text>
+        <view class="doctor-status">
+          <text class="status-text {{item.online ? 'online' : 'offline'}}">
+            {{item.online ? '在线' : '离线'}}
+          </text>
+        </view>
+      </view>
+      <view class="consult-btn">
+        <text>咨询</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="consultation-history">
+    <text class="section-title">咨询历史</text>
+    <view class="history-list">
+      <view class="history-item" wx:for="{{consultHistory}}" wx:key="id">
+        <view class="history-header">
+          <text class="doctor-name">{{item.doctorName}}</text>
+          <text class="consult-date">{{item.date}}</text>
+        </view>
+        <text class="consult-summary">{{item.summary}}</text>
+      </view>
+    </view>
+  </view>
+</view>

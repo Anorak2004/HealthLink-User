@@ -1,0 +1,179 @@
+/**health-assessment.wxss**/
+.header {
+  text-align: center;
+  margin-bottom: 30rpx;
+}
+
+.page-title {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+}
+
+.page-subtitle {
+  font-size: 28rpx;
+  color: #666;
+  margin-top: 10rpx;
+  display: block;
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.risk-badge {
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  font-weight: bold;
+}
+
+.risk-badge.low {
+  background: #e8f5e8;
+  color: #4CAF50;
+}
+
+.risk-badge.medium {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.risk-badge.high {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.health-score {
+  text-align: center;
+  margin: 40rpx 0;
+}
+
+.score-number {
+  font-size: 100rpx;
+  font-weight: bold;
+  color: #4CAF50;
+  display: block;
+}
+
+.score-label {
+  font-size: 28rpx;
+  color: #666;
+  margin-top: 10rpx;
+}
+
+.assessment-summary {
+  margin-top: 30rpx;
+}
+
+.summary-text {
+  font-size: 30rpx;
+  color: #333;
+  line-height: 1.6;
+}
+
+.indicators {
+  margin-top: 20rpx;
+}
+
+.indicator-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25rpx 0;
+  border-bottom: 1rpx solid #eee;
+}
+
+.indicator-item:last-child {
+  border-bottom: none;
+}
+
+.indicator-info {
+  flex: 1;
+}
+
+.indicator-name {
+  font-size: 30rpx;
+  color: #333;
+  display: block;
+}
+
+.indicator-value {
+  font-size: 26rpx;
+  color: #666;
+  margin-top: 5rpx;
+  display: block;
+}
+
+.indicator-status {
+  padding: 6rpx 16rpx;
+  border-radius: 16rpx;
+  font-size: 24rpx;
+  font-weight: bold;
+}
+
+.indicator-status.normal {
+  background: #e8f5e8;
+  color: #4CAF50;
+}
+
+.indicator-status.warning {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.indicator-status.danger {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.recommendations {
+  margin-top: 20rpx;
+}
+
+.recommendation-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 25rpx 0;
+  border-bottom: 1rpx solid #eee;
+}
+
+.recommendation-item:last-child {
+  border-bottom: none;
+}
+
+.recommendation-icon {
+  font-size: 40rpx;
+  margin-right: 20rpx;
+  margin-top: 5rpx;
+}
+
+.recommendation-content {
+  flex: 1;
+}
+
+.recommendation-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.recommendation-desc {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.5;
+}
+
+.actions {
+  margin-top: 40rpx;
+}
+
+.actions button {
+  width: 100%;
+  margin-bottom: 20rpx;
+}
