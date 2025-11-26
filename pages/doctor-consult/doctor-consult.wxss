@@ -74,6 +74,30 @@
   margin-bottom: 10rpx;
 }
 
+.doctor-specialties {
+  display: block;
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 6rpx;
+}
+
+.doctor-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10rpx;
+}
+
+.doctor-rating {
+  font-size: 24rpx;
+  color: #ff9800;
+}
+
+.doctor-fee {
+  font-size: 24rpx;
+  color: #4CAF50;
+}
+
 .doctor-status {
   display: flex;
   align-items: center;

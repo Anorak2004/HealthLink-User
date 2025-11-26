@@ -1,0 +1,45 @@
+.monitor-status {
+  margin-top: 10rpx;
+  font-size: 28rpx;
+}
+
+.snapshot-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12rpx;
+}
+
+.snapshot-label {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.snapshot-value {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.severity-normal {
+  color: #4CAF50;
+}
+
+.severity-warning {
+  color: #ff9800;
+}
+
+.severity-urgent {
+  color: #ff5722;
+}
+
+.severity-critical {
+  color: #f44336;
+  font-weight: bold;
+}
+
+.desc-text {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 26rpx;
+  color: #666;
+}
+

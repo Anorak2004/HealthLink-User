@@ -32,9 +32,11 @@ interface IndexData {
     getUserProfile: () => void
     getUserInfo: (e: any) => void
     goToHealthRecord: () => void
+    goToEmergencyMonitoring: () => void
     goToVoiceInput: () => void
     goToAssessment: () => void
     goToDoctor: () => void
+    goToEducation: () => void
   }
 }
 
@@ -144,6 +146,12 @@ Page({
     })
   },
 
+  goToEmergencyMonitoring() {
+    wx.navigateTo({
+      url: "/pages/emergency-monitoring/emergency-monitoring",
+    })
+  },
+
   goToVoiceInput() {
     wx.navigateTo({
       url: "/pages/voice-input/voice-input",
@@ -158,7 +166,14 @@ Page({
 
   goToDoctor() {
     wx.switchTab({
-      url: "/pages/doctor-chat/doctor-chat",
+      // 直接切换到底部导航的医生咨询 tab
+      url: "/pages/doctor-consult/doctor-consult",
+    })
+  },
+
+  goToEducation() {
+    wx.navigateTo({
+      url: "/pages/education/education",
     })
   },
 } as unknown as IndexData)  // 使用类型断言为 IndexData

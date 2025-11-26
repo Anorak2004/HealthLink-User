@@ -1,0 +1,60 @@
+<view class="page">
+  <!-- 搜索与分类 -->
+  <view class="card">
+    <text class="section-title">健康科普</text>
+    <input
+      class="search-input"
+      placeholder="搜索疾病、症状或关键词，例如：高血压、胸痛"
+      confirm-type="search"
+      value="{{searchQuery}}"
+      bindinput="onSearchChange"
+      bindconfirm="onSearchConfirm"
+    />
+    <scroll-view class="category-scroll" scroll-x="true">
+      <view
+        class="category-chip {{!activeCategoryId ? 'active' : ''}}"
+        data-id=""
+        bindtap="onCategoryTap"
+      >
+        全部
+      </view>
+      <view
+        wx:for="{{categories}}"
+        wx:key="id"
+        class="category-chip {{activeCategoryId === item.id ? 'active' : ''}}"
+        data-id="{{item.id}}"
+        bindtap="onCategoryTap"
+      >
+        {{item.name}}
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 科普文章列表 -->
+  <view class="card" wx:if="{{articles.length}}">
+    <view
+      wx:for="{{articles}}"
+      wx:key="id"
+      class="article-item"
+      bindtap="goToArticle"
+      data-id="{{item.id}}"
+    >
+      <view class="article-title-row">
+        <text class="article-title">{{item.title}}</text>
+        <text class="article-tag">{{item.category.name}}</text>
+      </view>
+      <text class="article-summary">{{item.summary}}</text>
+      <view class="article-meta">
+        <text class="article-meta-text">{{item.readCount}} 次阅读</text>
+        <text class="article-meta-text">
+          {{item.difficulty === 'basic' ? '基础' : (item.difficulty === 'intermediate' ? '进阶' : '专业')}}
+        </text>
+      </view>
+    </view>
+  </view>
+
+  <view class="card" wx:else>
+    <text class="desc-text">暂无相关科普内容，请尝试更换关键字或分类。</text>
+  </view>
+</view>
+

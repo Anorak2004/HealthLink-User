@@ -1,10 +1,14 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/emergency-monitoring/emergency-monitoring",
     "pages/health-record/health-record",
     "pages/health-assessment/health-assessment",
     "pages/doctor-consult/doctor-consult",
-    "pages/profile/profile"
+    "pages/doctor-chat/doctor-chat",
+    "pages/profile/profile",
+    "pages/education/education",
+    "pages/education-detail/education-detail"
   ],
   "window": {
     "backgroundTextStyle": "light",

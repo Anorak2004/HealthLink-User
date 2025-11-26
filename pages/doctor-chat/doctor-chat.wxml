@@ -1,0 +1,40 @@
+<view class="page">
+  <!-- 医生信息概览 -->
+  <view class="card doctor-header">
+    <view class="flex justify-between align-center">
+      <view>
+        <text class="doctor-name">{{doctorName || '在线医生'}}</text>
+        <text class="doctor-subtitle">图文问诊通道，请尽量描述清楚症状和既往情况。</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 聊天内容 -->
+  <scroll-view
+    class="chat-scroll card"
+    scroll-y="true"
+    scroll-with-animation="true"
+    scroll-top="{{scrollTop}}"
+  >
+    <view wx:for="{{messages}}" wx:key="id" class="message-row {{item.sender === 'user' ? 'from-user' : 'from-doctor'}}">
+      <view class="message-bubble">
+        <text class="message-text">{{item.content}}</text>
+        <text class="message-time">{{item.timestamp}}</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 输入栏 -->
+  <view class="chat-input-bar">
+    <input
+      class="chat-input"
+      placeholder="请输入想咨询的问题，例如：近期血压波动较大..."
+      value="{{inputValue}}"
+      bindinput="onInputChange"
+      confirm-type="send"
+      bindconfirm="onSend"
+    />
+    <button class="send-btn" bindtap="onSend">发送</button>
+  </view>
+</view>
+

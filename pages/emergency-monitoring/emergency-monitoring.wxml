@@ -1,0 +1,76 @@
+<view class="page">
+  <!-- 监测状态 -->
+  <view class="card">
+    <view class="flex justify-between align-center">
+      <view>
+        <text class="section-title">24小时紧急监测</text>
+        <view class="monitor-status">
+          <text class="status-label">当前状态：</text>
+          <text class="{{isMonitoring ? 'text-success' : 'text-danger'}}">
+            {{isMonitoring ? '监测中' : '未开启'}}
+          </text>
+        </view>
+      </view>
+      <button class="{{isMonitoring ? 'btn-secondary' : 'btn-primary'}}" bindtap="toggleMonitoring">
+        {{isMonitoring ? '停止监测' : '启动监测'}}
+      </button>
+    </view>
+  </view>
+
+  <!-- 最新生命体征 -->
+  <view class="card">
+    <text class="section-title">最新生命体征</text>
+    <view wx:if="{{lastSnapshot.time}}">
+      <view class="snapshot-row">
+        <text class="snapshot-label">采集时间</text>
+        <text class="snapshot-value">{{lastSnapshot.time}}</text>
+      </view>
+      <view class="snapshot-row">
+        <text class="snapshot-label">心率</text>
+        <text class="snapshot-value">{{lastSnapshot.heartRate || '--'}} bpm</text>
+      </view>
+      <view class="snapshot-row">
+        <text class="snapshot-label">血压</text>
+        <text class="snapshot-value">{{lastSnapshot.bloodPressureText || '--'}}</text>
+      </view>
+      <view class="snapshot-row">
+        <text class="snapshot-label">体温</text>
+        <text class="snapshot-value">{{lastSnapshot.temperature || '--'}} ℃</text>
+      </view>
+      <view class="snapshot-row">
+        <text class="snapshot-label">血氧饱和度</text>
+        <text class="snapshot-value">{{lastSnapshot.oxygenSaturation || '--'}} %</text>
+      </view>
+      <view class="snapshot-row">
+        <text class="snapshot-label">风险等级</text>
+        <text class="snapshot-value {{lastSnapshot.severityClass || ''}}">
+          {{lastSnapshot.severityText || '正常'}}
+        </text>
+      </view>
+    </view>
+    <view wx:else>
+      <text class="desc-text">尚未采集到生命体征数据，启动监测后将自动采集。</text>
+    </view>
+  </view>
+
+  <!-- 紧急事件统计 -->
+  <view class="card">
+    <text class="section-title">紧急事件统计</text>
+    <view class="snapshot-row">
+      <text class="snapshot-label">累计紧急事件</text>
+      <text class="snapshot-value text-danger">{{emergencyCount}} 次</text>
+    </view>
+  </view>
+
+  <!-- 使用说明 -->
+  <view class="card">
+    <text class="section-title">说明</text>
+    <text class="desc-text">
+      本功能为模拟 24 小时健康监测，用于演示当检测到严重异常时，自动弹出提示并引导用户主动拨打 120 急救电话。
+    </text>
+    <text class="desc-text">
+      实际应用中应接入真实穿戴设备或医院监护系统的数据源，并遵循当地医疗与隐私合规要求。
+    </text>
+  </view>
+</view>
+

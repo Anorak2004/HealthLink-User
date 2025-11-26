@@ -13,7 +13,14 @@
       <view class="doctor-info">
         <text class="doctor-name">{{item.name}}</text>
         <text class="doctor-title">{{item.title}}</text>
-        <text class="doctor-hospital">{{item.hospital}}</text>
+        <text class="doctor-hospital">{{item.hospital}} · {{item.department}}</text>
+        <text class="doctor-specialties">
+          擅长：{{item.specialties && item.specialties.length ? item.specialties.join('、') : '常见内科问题'}}
+        </text>
+        <view class="doctor-meta">
+          <text class="doctor-rating">评分 {{item.rating}}（{{item.reviewCount}} 条评价）</text>
+          <text class="doctor-fee">¥{{item.consultationFee}} 起/次</text>
+        </view>
         <view class="doctor-status">
           <text class="status-text {{item.online ? 'online' : 'offline'}}">
             {{item.online ? '在线' : '离线'}}

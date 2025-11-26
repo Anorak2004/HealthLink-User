@@ -1,0 +1,28 @@
+<view class="page">
+  <view class="card" wx:if="{{article}}">
+    <text class="article-title">{{article.title}}</text>
+    <view class="article-meta">
+      <text class="article-meta-text">{{article.category.name}}</text>
+      <text class="article-meta-text">{{article.readCount}} 次阅读</text>
+    </view>
+    <view class="article-meta">
+      <text class="article-meta-text">作者：{{article.author}}</text>
+      <text class="article-meta-text">难度：{{difficultyText}}</text>
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{article}}">
+    <view wx:for="{{contentLines}}" wx:key="index" class="content-paragraph">
+      <text class="content-text">{{item}}</text>
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{article && article.images && article.images.length}}">
+    <text class="section-title">配图说明</text>
+    <view wx:for="{{article.images}}" wx:key="url" class="image-row">
+      <image class="article-image" src="{{item.url}}" mode="aspectFit" />
+      <text class="image-caption">{{item.caption}}</text>
+    </view>
+  </view>
+</view>
+

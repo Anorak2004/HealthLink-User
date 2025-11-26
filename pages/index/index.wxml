@@ -39,6 +39,10 @@
         <image class="action-icon" src="/images/record-icon.png" />
         <text class="action-text">记录健康数据</text>
       </view>
+      <view class="action-item" bindtap="goToEmergencyMonitoring">
+        <image class="action-icon" src="/images/monitor-icon.png" />
+        <text class="action-text">24小时监测</text>
+      </view>
       <view class="action-item" bindtap="goToVoiceInput">
         <image class="action-icon" src="/images/voice-icon.png" />
         <text class="action-text">语音输入</text>
@@ -50,6 +54,10 @@
       <view class="action-item" bindtap="goToDoctor">
         <image class="action-icon" src="/images/doctor-icon.png" />
         <text class="action-text">咨询医生</text>
+      </view>
+      <view class="action-item" bindtap="goToEducation">
+        <image class="action-icon" src="/images/education-icon.png" />
+        <text class="action-text">健康科普</text>
       </view>
     </view>
   </view>
