@@ -45,7 +45,7 @@ Page<HealthRecordData, {}>({
       {
         value: "blood_pressure",
         label: "血压",
-        icon: "/images/blood-pressure.png",
+        icon: "/images/record.png",
         inputType: "text",
         placeholder: "如：120/80",
         unit: "mmHg",
@@ -54,7 +54,7 @@ Page<HealthRecordData, {}>({
       {
         value: "blood_sugar",
         label: "血糖",
-        icon: "/images/blood-sugar.png",
+        icon: "/images/record.png",
         inputType: "digit",
         placeholder: "如：5.6",
         unit: "mmol/L",
@@ -63,7 +63,7 @@ Page<HealthRecordData, {}>({
       {
         value: "temperature",
         label: "体温",
-        icon: "/images/temperature.png",
+        icon: "/images/record.png",
         inputType: "digit",
         placeholder: "如：36.5",
         unit: "°C",
@@ -72,7 +72,7 @@ Page<HealthRecordData, {}>({
       {
         value: "weight",
         label: "体重",
-        icon: "/images/weight.png",
+        icon: "/images/record.png",
         inputType: "digit",
         placeholder: "如：65.5",
         unit: "kg",

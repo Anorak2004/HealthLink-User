@@ -102,23 +102,23 @@
 }
 
 .action-item {
-  width: 45%;
+  width: 30%;
   text-align: center;
-  padding: 30rpx 20rpx;
-  margin-bottom: 20rpx;
+  padding: 20rpx 10rpx;
+  margin-bottom: 16rpx;
   background: #f8f9fa;
   border-radius: 16rpx;
 }
 
 .action-icon {
-  width: 60rpx;
-  height: 60rpx;
+  width: 48rpx;
+  height: 48rpx;
   display: block;
-  margin: 0 auto 15rpx;
+  margin: 0 auto 10rpx;
 }
 
 .action-text {
-  font-size: 28rpx;
+  font-size: 26rpx;
   color: #333;
 }
 

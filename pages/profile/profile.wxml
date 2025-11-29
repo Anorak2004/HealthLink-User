@@ -3,7 +3,7 @@
   <!-- 用户信息 -->
   <view class="card user-card">
     <view class="user-header">
-      <image class="avatar" src="{{userInfo.avatarUrl || '/images/default-avatar.png'}}" />
+      <image class="avatar" src="{{userInfo.avatarUrl || '/images/profile.png'}}" />
       <view class="user-info">
         <text class="username">{{userInfo.nickName || '用户'}}</text>
         <text class="user-id">ID: {{userId}}</text>

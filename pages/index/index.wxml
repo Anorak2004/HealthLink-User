@@ -10,7 +10,7 @@
           <text class="{{healthStatus.class}}">{{healthStatus.text}}</text>
         </view>
       </view>
-      <image class="avatar" src="{{userInfo.avatarUrl || '/images/default-avatar.png'}}" />
+      <image class="avatar" src="{{userInfo.avatarUrl || '/images/profile.png'}}" />
     </view>
   </view>
 
@@ -36,27 +36,27 @@
     <text class="section-title">快捷功能</text>
     <view class="quick-actions">
       <view class="action-item" bindtap="goToHealthRecord">
-        <image class="action-icon" src="/images/record-icon.png" />
+        <image class="action-icon" src="/images/record.png" />
         <text class="action-text">记录健康数据</text>
       </view>
       <view class="action-item" bindtap="goToEmergencyMonitoring">
-        <image class="action-icon" src="/images/monitor-icon.png" />
+        <image class="action-icon" src="/images/record-active.png" />
         <text class="action-text">24小时监测</text>
       </view>
       <view class="action-item" bindtap="goToVoiceInput">
-        <image class="action-icon" src="/images/voice-icon.png" />
+        <image class="action-icon" src="/images/home.png" />
         <text class="action-text">语音输入</text>
       </view>
       <view class="action-item" bindtap="goToAssessment">
-        <image class="action-icon" src="/images/assessment-icon.png" />
+        <image class="action-icon" src="/images/assessment.png" />
         <text class="action-text">健康评估</text>
       </view>
       <view class="action-item" bindtap="goToDoctor">
-        <image class="action-icon" src="/images/doctor-icon.png" />
+        <image class="action-icon" src="/images/doctor.png" />
         <text class="action-text">咨询医生</text>
       </view>
       <view class="action-item" bindtap="goToEducation">
-        <image class="action-icon" src="/images/education-icon.png" />
+        <image class="action-icon" src="/images/assessment-active.png" />
         <text class="action-text">健康科普</text>
       </view>
     </view>

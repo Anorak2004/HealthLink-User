@@ -141,7 +141,8 @@ Page({
 
   // 导航到各个页面
   goToHealthRecord() {
-    wx.navigateTo({
+    // 健康记录是 tabBar 页面，必须使用 switchTab
+    wx.switchTab({
       url: "/pages/health-record/health-record",
     })
   },
@@ -159,7 +160,8 @@ Page({
   },
 
   goToAssessment() {
-    wx.navigateTo({
+    // 健康评估是 tabBar 页面，必须使用 switchTab
+    wx.switchTab({
       url: "/pages/health-assessment/health-assessment",
     })
   },

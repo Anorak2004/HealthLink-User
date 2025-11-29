@@ -26,10 +26,10 @@
 }
 
 .type-item {
-  width: 45%;
+  width: 23%;
   text-align: center;
-  padding: 30rpx 20rpx;
-  margin-bottom: 20rpx;
+  padding: 20rpx 10rpx;
+  margin-bottom: 16rpx;
   background: #f8f9fa;
   border-radius: 16rpx;
   border: 2rpx solid transparent;
@@ -41,14 +41,14 @@
 }
 
 .type-icon {
-  width: 50rpx;
-  height: 50rpx;
+  width: 40rpx;
+  height: 40rpx;
   display: block;
-  margin: 0 auto 15rpx;
+  margin: 0 auto 10rpx;
 }
 
 .type-label {
-  font-size: 28rpx;
+  font-size: 26rpx;
   color: #333;
 }
 

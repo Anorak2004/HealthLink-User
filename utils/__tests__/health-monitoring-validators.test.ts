@@ -177,7 +177,7 @@ describe('健康监护数据验证测试', () => {
         tags: ['高血压', '预防', '治疗'],
         images: [
           {
-            url: '/images/hypertension.jpg',
+            url: '/images/assessment.png',
             caption: '血压测量',
             alt: '血压计图片'
           }
